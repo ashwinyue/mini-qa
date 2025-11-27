@@ -1,6 +1,9 @@
 import { ConfigProvider, App as AntdApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './components/layout/MainLayout';
+import Login from './pages/Login';
+import PrivateRoute from './components/common/PrivateRoute';
 import './App.css';
 
 function App() {
@@ -28,9 +31,21 @@ function App() {
       }}
     >
       <AntdApp>
-        <div className="App">
-          <MainLayout />
-        </div>
+        <BrowserRouter>
+          <div className="App">
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="/*"
+                element={
+                  <PrivateRoute>
+                    <MainLayout />
+                  </PrivateRoute>
+                }
+              />
+            </Routes>
+          </div>
+        </BrowserRouter>
       </AntdApp>
     </ConfigProvider>
   );

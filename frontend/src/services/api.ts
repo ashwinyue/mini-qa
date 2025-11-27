@@ -33,6 +33,12 @@ class ApiService {
         const simpleGetPaths = ['/health', '/models/list', '/greet'];
         const isSimpleGet = method === 'get' && simpleGetPaths.includes(pathname);
 
+        // 添加认证 token
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+          config.headers['Authorization'] = `Bearer ${token}`;
+        }
+
         if (!isSimpleGet) {
           const tenantId = localStorage.getItem('tenantId') || 'default';
           if (tenantId) config.headers['X-Tenant-ID'] = tenantId;
@@ -87,7 +93,12 @@ class ApiService {
         if (error.response?.status === 401) {
           // Handle unauthorized access
           localStorage.removeItem('apiKey');
-          window.location.href = '/login';
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('user_info');
+          // 只在非登录页面时跳转
+          if (!window.location.pathname.includes('/login')) {
+            window.location.href = '/login';
+          }
         }
         return Promise.reject(error);
       }
@@ -163,6 +174,23 @@ class ApiService {
       data: { ids },
     });
     return response.data;
+  }
+
+  // Generic HTTP methods for other services
+  async get<T = any>(url: string, config?: any) {
+    return this.client.get<T>(url, config);
+  }
+
+  async post<T = any>(url: string, data?: any, config?: any) {
+    return this.client.post<T>(url, data, config);
+  }
+
+  async put<T = any>(url: string, data?: any, config?: any) {
+    return this.client.put<T>(url, data, config);
+  }
+
+  async delete<T = any>(url: string, config?: any) {
+    return this.client.delete<T>(url, config);
   }
 }
 

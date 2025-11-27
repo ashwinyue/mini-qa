@@ -202,3 +202,5 @@
 2025-11-27 17:36:08,539 | INFO | root | latency route=course cost=830.01ms | request={"query": "Python课程适合什么人学习？"}
 2025-11-27 17:37:25,487 | INFO | root | latency route=course cost=997.44ms | request={"query": "Python课程适合什么人学习？"}
 2025-11-27 17:37:31,811 | INFO | root | latency route=course cost=765.09ms | request={"query": "Python课程适合什么人学习？"}
+2025-11-27 17:46:52,371 | INFO | root | latency route=direct cost=877.48ms | request={"query": "查个东西"}
+2025-11-27 17:47:09,127 | INFO | root | latency route=direct cost=1149.67ms | request={"query": "想看电视"}

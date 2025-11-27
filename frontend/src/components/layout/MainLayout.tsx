@@ -8,8 +8,10 @@ import {
   UserOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import { useChatStore, useSystemStore } from '../../stores';
 import { apiService } from '../../services';
+import { authService } from '../../services/authService';
 import ChatInterface from '../chat/ChatInterface';
 import KnowledgeSearch from '../kb/KnowledgeSearch';
 import TenantManagement from '../tenants/TenantManagement';
@@ -25,9 +27,11 @@ interface MainLayoutProps {
 
 const MainLayout: React.FC<MainLayoutProps> = () => {
   const { message } = AntdApp.useApp();
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileDrawerVisible, setMobileDrawerVisible] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState('chat');
+  const [currentUser, setCurrentUser] = useState(authService.getUser());
   
   const { config, setConfig, setLoading } = useSystemStore();
   const { createSession } = useChatStore();
@@ -67,11 +71,16 @@ const MainLayout: React.FC<MainLayoutProps> = () => {
     message.success('已创建新对话');
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log('[Layout] 点击退出登录');
-    localStorage.removeItem('apiKey');
-    localStorage.removeItem('tenantId');
-    window.location.href = '/login';
+    try {
+      await authService.logout();
+      message.success('已退出登录');
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      message.error('退出登录失败');
+    }
   };
 
   const userMenuItems = [
@@ -79,6 +88,10 @@ const MainLayout: React.FC<MainLayoutProps> = () => {
       key: 'profile',
       icon: <UserOutlined />,
       label: '个人资料',
+      disabled: true,
+    },
+    {
+      type: 'divider' as const,
     },
     {
       key: 'logout',
@@ -248,8 +261,8 @@ const MainLayout: React.FC<MainLayoutProps> = () => {
               placement="bottomRight"
               arrow
             >
-              <Button type="text" icon={<UserOutlined />}>
-                用户
+              <Button type="text" icon={<UserOutlined />} className="flex items-center gap-2">
+                {currentUser?.nickname || '用户'}
               </Button>
             </Dropdown>
           </div>

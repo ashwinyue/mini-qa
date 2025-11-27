@@ -24,12 +24,14 @@ try:
     from . import config
     from .security_middleware import RedactionMiddleware, build_default_config, sanitize_dict
     from .tools import getdb
+    from . import auth
 except Exception:
     import graph as graph
     from graph import build_graph, get_react_agent, gen_suggest_questions
     import config as config
     from security_middleware import RedactionMiddleware, build_default_config, sanitize_dict
     from tools import getdb
+    import auth
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(name)s | %(message)s")
@@ -115,6 +117,28 @@ class VectorsAddRequest(BaseModel):
 
 class VectorsDeleteRequest(BaseModel):
     ids: List[str]
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+class RegisterRequest(BaseModel):
+    username: str
+    password: str
+    nickname: str
+    email: Optional[str] = None
+
+def get_current_user(request: Request) -> Optional[Dict[str, Any]]:
+    """从请求头获取当前用户"""
+    token = request.headers.get("Authorization")
+    if not token:
+        return None
+    
+    # 移除 "Bearer " 前缀
+    if token.startswith("Bearer "):
+        token = token[7:]
+    
+    return auth.verify_token(token)
 
 
 # 计时与指标装饰器：异步统计耗时并做日志与分类更新（保持与原逻辑一致）
@@ -495,6 +519,58 @@ async def get_order(order_id: str, request: Request):
         raise
     except Exception:
         raise HTTPException(status_code=500, detail="Internal Server Error")
+
+
+@app.post("/api/auth/login")
+async def login(req: LoginRequest):
+    """用户登录"""
+    user = auth.verify_user(req.username, req.password)
+    if not user:
+        raise HTTPException(status_code=401, detail="用户名或密码错误")
+    
+    token = auth.create_token(req.username)
+    
+    return _ok({
+        "token": token,
+        "user": user,
+        "expiresIn": auth.TOKEN_EXPIRE_DAYS * 24 * 3600,  # 秒
+    })
+
+
+@app.post("/api/auth/register")
+async def register(req: RegisterRequest):
+    """用户注册"""
+    result = auth.create_user(
+        username=req.username,
+        password=req.password,
+        nickname=req.nickname,
+        email=req.email or "",
+    )
+    
+    if not result.get("ok"):
+        raise HTTPException(status_code=400, detail=result.get("error", "注册失败"))
+    
+    return _ok({"message": "注册成功"})
+
+
+@app.post("/api/auth/logout")
+async def logout(request: Request):
+    """用户登出"""
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if token:
+        auth.revoke_token(token)
+    
+    return _ok({"message": "登出成功"})
+
+
+@app.get("/api/auth/me")
+async def get_me(request: Request):
+    """获取当前用户信息"""
+    user = get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="未登录")
+    
+    return _ok(user)
 
 
 if __name__ == "__main__":
