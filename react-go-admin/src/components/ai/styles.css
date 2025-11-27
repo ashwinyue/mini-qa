@@ -1,0 +1,131 @@
+/* AI 组件样式 */
+
+/* Markdown 内容样式 */
+.markdown-content {
+    line-height: 1.6;
+}
+
+.markdown-content p {
+    margin-bottom: 0.5em;
+}
+
+.markdown-content p:last-child {
+    margin-bottom: 0;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    padding-left: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.markdown-content code {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.markdown-content pre {
+    background-color: #f5f5f5;
+    padding: 1em;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 0.5em 0;
+}
+
+.markdown-content pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+.markdown-content blockquote {
+    border-left: 3px solid #ddd;
+    padding-left: 1em;
+    margin-left: 0;
+    color: #666;
+}
+
+.markdown-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0.5em 0;
+}
+
+.markdown-content th,
+.markdown-content td {
+    border: 1px solid #ddd;
+    padding: 0.5em;
+    text-align: left;
+}
+
+.markdown-content th {
+    background-color: #f5f5f5;
+}
+
+/* 聊天界面动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message-item {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 录音动画 */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.recording-indicator {
+    animation: pulse 1s infinite;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+    /* 消息气泡在移动端占更多宽度 */
+    .message-item .max-w-\[80\%\] {
+        max-width: 90%;
+    }
+
+    /* 聊天输入区域调整 */
+    .chat-input-wrapper {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* 建议按钮在移动端换行 */
+    .suggestion-list {
+        flex-wrap: wrap;
+    }
+
+    /* 图片预览在移动端更小 */
+    .uploaded-image-preview {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* 更小屏幕的调整 */
+    .message-item .max-w-\[80\%\] {
+        max-width: 95%;
+    }
+
+    /* 隐藏部分按钮文字 */
+    .action-button-text {
+        display: none;
+    }
+}
