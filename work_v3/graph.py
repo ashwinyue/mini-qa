@@ -217,7 +217,20 @@ def kb_node(state: State) -> Dict[str, Any]:
     serialized, docs = retrieve_kb(q, state.get("tenant_id") or _CURRENT_TENANT)
     sources = []
     try:
-        sources = [getattr(d, "metadata", {}) for d in docs]
+        # 完善 sources 信息，包含文本内容、元数据和相似度分数
+        for i, d in enumerate(docs):
+            metadata = getattr(d, "metadata", {})
+            page_content = getattr(d, "page_content", "")
+            source_info = {
+                "index": i + 1,
+                "content": page_content[:200] + "..." if len(page_content) > 200 else page_content,
+                "metadata": metadata,
+                "source": metadata.get("source", "未知来源"),
+            }
+            # 如果有 ID，添加到 source_info
+            if "id" in metadata:
+                source_info["id"] = metadata["id"]
+            sources.append(source_info)
     except Exception:
         sources = []
     if not docs:

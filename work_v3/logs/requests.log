@@ -197,3 +197,8 @@
 2025-11-27 16:39:24,177 | INFO | root | latency route=course cost=1059.42ms | request={"query": "课程咨询"}
 2025-11-27 17:30:02,390 | INFO | root | latency route=direct cost=1105.81ms | request={"query": "是"}
 2025-11-27 17:30:09,616 | INFO | root | latency route=direct cost=818.75ms | request={"query": "是"}
+2025-11-27 17:35:10,992 | INFO | root | latency route=course cost=885.05ms | request={"query": "Python课程适合什么人学习？"}
+2025-11-27 17:35:48,177 | INFO | root | latency route=direct cost=2463.77ms | request={"query": "Python基础"}
+2025-11-27 17:36:08,539 | INFO | root | latency route=course cost=830.01ms | request={"query": "Python课程适合什么人学习？"}
+2025-11-27 17:37:25,487 | INFO | root | latency route=course cost=997.44ms | request={"query": "Python课程适合什么人学习？"}
+2025-11-27 17:37:31,811 | INFO | root | latency route=course cost=765.09ms | request={"query": "Python课程适合什么人学习？"}
