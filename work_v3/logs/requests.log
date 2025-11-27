@@ -1,0 +1,197 @@
+2025-11-15 23:42:29,602 | INFO | root | latency route=course cost=2756.59ms | request={"query": "新手能学吗？"}
+2025-11-15 23:43:21,016 | INFO | root | latency route=order cost=2282.39ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-15 23:50:42,414 | INFO | root | latency route=human cost=125.00ms | request={"query": "转人工"}
+2025-11-15 23:51:05,862 | INFO | root | latency route=order cost=1998.21ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-15 23:51:20,533 | INFO | root | latency route=course cost=2461.63ms | request={"query": "新手能学吗？"}
+2025-11-16 00:17:22,593 | INFO | root | latency route=course cost=2511.54ms | request={"query": "新手能学吗？"}
+2025-11-16 00:17:53,221 | INFO | root | latency route=course cost=2409.83ms | request={"query": "售前咨询：课程适合新手吗？"}
+2025-11-16 00:18:23,047 | INFO | root | latency route=course cost=2546.95ms | request={"query": "售后服务：课后答疑支持有哪些？"}
+2025-11-16 00:30:56,111 | INFO | root | latency route=direct cost=2871.79ms | request={"query": "AI会不会替代程序员？"}
+2025-11-16 00:31:37,871 | INFO | root | latency route=course cost=2480.79ms | request={"query": "售前咨询：课程适合新人吗？"}
+2025-11-16 00:32:19,226 | INFO | root | latency route=course cost=2466.34ms | request={"query": "售后服务：课后答疑支持有哪些？"}
+2025-11-16 00:43:51,444 | INFO | root | latency route=direct cost=2766.21ms | request={"query": "AI会不会替代程序员？"}
+2025-11-16 00:44:30,332 | INFO | root | latency route=course cost=2567.81ms | request={"query": "售前咨询：课程适合新人吗？"}
+2025-11-16 00:45:06,208 | INFO | root | latency route=course cost=2506.30ms | request={"query": "售后服务：课后答疑支持有哪些？"}
+2025-11-16 00:53:34,447 | INFO | root | latency route=course cost=2605.23ms | request={"query": "新手能学吗？"}
+2025-11-16 00:53:56,923 | INFO | root | latency route=order cost=1923.70ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-16 00:54:19,682 | INFO | root | latency route=human cost=12.38ms | request={"query": "转人工"}
+2025-11-16 00:58:42,203 | INFO | root | latency route=order cost=122.32ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-16 01:02:51,216 | INFO | root | latency route=order cost=5.71ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-16 01:03:16,893 | INFO | root | latency route=order cost=116.29ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-16 01:07:02,367 | INFO | root | latency route=order cost=5.04ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-16 01:07:26,538 | INFO | root | latency route=order cost=4203.85ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-16 01:10:44,437 | INFO | root | latency route=order cost=3950.69ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-16 01:15:16,617 | INFO | root | latency route=order cost=3522.74ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-16 01:16:30,344 | INFO | root | latency route=order cost=3792.79ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-16 01:20:45,040 | INFO | root | latency route=order cost=3874.36ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-16 01:25:22,679 | INFO | root | latency route=order cost=4024.74ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-16 01:30:07,323 | INFO | root | latency route=order cost=3864.72ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-16 01:41:58,442 | INFO | root | latency route=order cost=4048.56ms | request={"query": "查询订单 20251114001 什么时候开课？ 我的身份证是 [REDACTED] "}
+2025-11-16 01:42:05,587 | INFO | root | latency route=order cost=3925.45ms | request={"query": "查询订单 20251114001 什么时候开课？ 我的密码 [REDACTED] "}
+2025-11-17 16:25:22,896 | INFO | root | latency route=direct cost=2767.69ms | request={"query": "你好"}
+2025-11-17 16:25:25,849 | INFO | root | latency route=course cost=2789.97ms | request={"query": "课程咨询"}
+2025-11-17 16:30:01,392 | INFO | root | latency route=direct cost=2682.73ms | request={"query": "你好"}
+2025-11-17 16:30:04,196 | INFO | root | latency route=course cost=2637.44ms | request={"query": "课程咨询"}
+2025-11-17 16:33:19,293 | INFO | root | latency route=direct cost=3251.62ms | request={"query": "你好"}
+2025-11-17 16:33:27,389 | INFO | root | latency route=course cost=3368.41ms | request={"query": "课程咨询"}
+2025-11-17 16:37:27,860 | INFO | root | latency route=direct cost=2774.49ms | request={"query": "你好"}
+2025-11-17 16:37:34,792 | INFO | root | latency route=course cost=2644.24ms | request={"query": "课程咨询"}
+2025-11-17 16:40:17,505 | INFO | root | latency route=direct cost=2788.58ms | request={"query": "你好"}
+2025-11-17 16:40:24,397 | INFO | root | latency route=course cost=2704.94ms | request={"query": "课程咨询"}
+2025-11-17 16:45:32,574 | INFO | root | latency route=direct cost=2740.26ms | request={"query": "你好"}
+2025-11-17 16:45:39,829 | INFO | root | latency route=course cost=2727.03ms | request={"query": "课程咨询"}
+2025-11-17 16:55:28,720 | INFO | root | latency route=direct cost=2796.88ms | request={"query": "你好"}
+2025-11-17 16:55:35,628 | INFO | root | latency route=course cost=2764.27ms | request={"query": "课程咨询"}
+2025-11-17 17:13:09,013 | INFO | root | latency route=course cost=2799.55ms | request={"query": "新手能学吗？"}
+2025-11-17 17:13:24,428 | INFO | root | latency route=order cost=4256.25ms | request={"query": "查询订单 20251114001 什么时候开课？"}
+2025-11-17 17:13:43,962 | INFO | root | latency route=human cost=10.25ms | request={"query": "转人工"}
+2025-11-17 17:15:13,747 | INFO | root | latency route=direct cost=2824.57ms | request={"query": "小白适合学这门课吗？"}
+2025-11-17 17:15:42,468 | INFO | root | latency route=direct cost=2672.71ms | request={"query": "那Java程序员呢？"}
+2025-11-17 17:16:44,953 | INFO | root | latency route=course cost=2762.46ms | request={"query": "课程咨询"}
+2025-11-17 17:19:22,700 | INFO | root | latency route=course cost=3161.08ms | request={"query": "课程咨询"}
+2025-11-17 17:23:00,010 | INFO | root | latency route=course cost=2988.75ms | request={"query": "课程咨询"}
+2025-11-17 17:24:41,304 | INFO | root | latency route=direct cost=3043.89ms | request={"query": "小白适合学这门课吗？"}
+2025-11-17 17:24:53,705 | INFO | root | latency route=direct cost=3007.72ms | request={"query": "那Java程序员呢？"}
+2025-11-17 17:25:30,428 | INFO | root | latency route=order cost=4571.56ms | request={"query": "查询订单 20251114001 开课时间"}
+2025-11-17 20:40:10,776 | INFO | root | latency route=course cost=3026.42ms | request={"query": "课程咨询"}
+2025-11-17 20:40:53,677 | INFO | root | latency route=course cost=2546.80ms | request={"query": "课程咨询"}
+2025-11-17 20:41:04,799 | INFO | root | latency route=course cost=2343.38ms | request={"query": "课程包含几个章节"}
+2025-11-17 20:41:22,749 | INFO | root | latency route=course cost=2450.33ms | request={"query": "课程用了哪些大模型工具"}
+2025-11-17 20:45:38,271 | INFO | root | latency route=course cost=3959.27ms | request={"query": "课程用了哪些大模型工具"}
+2025-11-17 20:47:00,620 | INFO | root | latency route=course cost=2925.82ms | request={"query": "课程咨询"}
+2025-11-17 20:47:33,949 | INFO | root | latency route=course cost=2410.33ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-17 20:49:08,516 | INFO | root | latency route=course cost=2918.74ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-17 20:49:53,092 | INFO | root | latency route=course cost=2859.83ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-17 20:50:32,861 | INFO | root | latency route=course cost=2881.10ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-17 20:51:20,633 | INFO | root | latency route=course cost=2736.27ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-17 20:55:37,451 | INFO | root | latency route=course cost=3061.23ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-17 20:56:52,194 | INFO | root | latency route=course cost=2744.57ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-17 20:59:11,029 | INFO | root | latency route=course cost=2981.83ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-17 21:00:49,530 | INFO | root | latency route=course cost=2843.99ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-17 21:01:55,011 | INFO | root | latency route=course cost=2591.23ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-17 21:16:36,764 | INFO | root | latency route=course cost=2579.59ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-17 21:26:32,310 | INFO | root | latency route=course cost=3253.64ms | request={"query": "课程咨询"}
+2025-11-17 21:29:42,050 | INFO | root | latency route=course cost=3226.36ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-17 21:30:56,482 | INFO | root | latency route=course cost=2478.24ms | request={"query": "课程用了哪个大模型"}
+2025-11-17 21:35:06,725 | INFO | root | latency route=course cost=3174.00ms | request={"query": "课程咨询"}
+2025-11-17 21:37:40,935 | INFO | root | latency route=course cost=3006.36ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-17 21:38:14,750 | INFO | root | latency route=course cost=2349.56ms | request={"query": "课程用到了哪些开发框架"}
+2025-11-17 21:38:55,560 | INFO | root | latency route=course cost=2528.46ms | request={"query": "新手可以学吗"}
+2025-11-17 21:42:21,476 | INFO | root | latency route=course cost=3158.55ms | request={"query": "课程咨询"}
+2025-11-17 21:43:20,998 | INFO | root | latency route=direct cost=2738.77ms | request={"query": "你好"}
+2025-11-17 21:43:27,604 | INFO | root | latency route=course cost=2668.39ms | request={"query": "课程咨询"}
+2025-11-17 21:44:38,937 | INFO | root | latency route=direct cost=2658.14ms | request={"query": "你好"}
+2025-11-17 21:44:45,513 | INFO | root | latency route=course cost=2606.07ms | request={"query": "课程咨询"}
+2025-11-17 22:34:44,406 | INFO | root | latency route=course cost=2595.09ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-17 22:35:18,955 | INFO | root | latency route=course cost=2777.23ms | request={"query": "课程咨询"}
+2025-11-17 22:35:30,302 | INFO | root | latency route=course cost=2545.06ms | request={"query": "课程咨询"}
+2025-11-17 22:35:38,679 | INFO | root | latency route=course cost=2601.25ms | request={"query": "课程咨询"}
+2025-11-17 23:13:32,778 | INFO | root | latency route=direct cost=3320.02ms | request={"query": "你好"}
+2025-11-17 23:13:37,275 | INFO | root | model switch old=qwen-turbo new=qwen-plus
+2025-11-17 23:13:37,290 | INFO | root | model switch apply new=qwen-plus
+2025-11-17 23:13:41,156 | INFO | root | latency route=course cost=3853.54ms | request={"query": "课程咨询"}
+2025-11-17 23:14:28,835 | INFO | root | latency route=direct cost=3189.70ms | request={"query": "你好"}
+2025-11-17 23:14:33,336 | INFO | root | model switch old=qwen-turbo new=qwen-plus
+2025-11-17 23:14:33,351 | INFO | root | model switch apply new=qwen-plus
+2025-11-17 23:14:33,354 | INFO | root | model switch old=qwen-plus new=qwen-turbo
+2025-11-17 23:14:33,364 | INFO | root | model switch apply new=qwen-turbo
+2025-11-17 23:14:36,695 | INFO | root | latency route=course cost=3323.55ms | request={"query": "课程咨询"}
+2025-11-17 23:24:07,317 | INFO | root | latency route=course cost=3589.83ms | request={"query": "课程咨询"}
+2025-11-17 23:40:00,444 | INFO | root | model switch apply new=qwen-turbo
+2025-11-17 23:40:09,807 | INFO | root | model switch old=qwen-turbo new=qwen-plus
+2025-11-17 23:40:09,823 | INFO | root | model switch apply new=qwen-plus
+2025-11-17 23:40:24,641 | INFO | root | latency route=course cost=4258.25ms | request={"query": "课程用到了哪些开发框架"}
+2025-11-18 01:36:19,748 | INFO | root | latency route=direct cost=4920.10ms | request={"query": null}
+2025-11-18 16:17:10,552 | INFO | audit | vectors_add {"request_id": "8f48def2-1bed-4ec3-91b0-0e9de5a3925c", "added": 1, "skipped": 0, "ids": ["fd6580e206b7b768dc305c316c5ae894cfa6a877"]}
+2025-11-18 16:20:11,770 | INFO | audit | vectors_delete {"request_id": "7862c44f-db78-4a17-ae0f-c0d80b16e089", "deleted": 0, "ids": ["fd6580e206b7b768dc305c316c5ae894cfa6a877"]}
+2025-11-18 22:36:04,925 | INFO | root | latency route=course cost=2680.51ms | request={"query": "课程适合新手吗？"}
+2025-11-18 22:36:20,637 | INFO | root | latency route=course cost=2126.76ms | request={"query": "课程适合新手吗？"}
+2025-11-18 22:48:46,881 | INFO | audit | vectors_add {"request_id": "6f862439-8015-4006-8d07-96ad2eb09797", "added": 1, "skipped": 0, "ids": ["t1_kb_demo_001"]}
+2025-11-18 22:49:45,722 | INFO | audit | vectors_add {"request_id": "9fd28b4f-f2a0-4002-978d-c11903d3abc6", "added": 0, "skipped": 1, "ids": []}
+2025-11-18 22:50:00,177 | INFO | root | latency route=course cost=2585.90ms | request={"query": "课程适合新手吗？"}
+2025-11-18 22:50:34,046 | INFO | root | latency route=course cost=2276.39ms | request={"query": "是t1课程吗？"}
+2025-11-18 22:51:15,541 | INFO | audit | vectors_add {"request_id": "98366242-538c-4b0e-94b9-6807a36f5b26", "added": 0, "skipped": 1, "ids": []}
+2025-11-18 22:51:22,438 | INFO | root | latency route=course cost=2174.16ms | request={"query": "课程适合新手吗？"}
+2025-11-18 22:51:43,662 | INFO | root | latency route=direct cost=2347.69ms | request={"query": "这是t1租户的知识库吗？"}
+2025-11-18 22:56:26,349 | INFO | audit | vectors_add {"request_id": "0cdb9d3e-754b-4446-87d9-6fa8d9f61139", "added": 1, "skipped": 0, "ids": ["t1_kb_demo_002"]}
+2025-11-18 22:56:35,763 | INFO | root | latency route=course cost=2533.51ms | request={"query": "课程适合新手吗？"}
+2025-11-18 22:56:52,610 | INFO | root | latency route=direct cost=2340.95ms | request={"query": "这是t1租户的吗？"}
+2025-11-18 22:57:13,858 | INFO | root | latency route=course cost=2420.11ms | request={"query": "这是t1租户的课程数据库吗？"}
+2025-11-18 22:58:09,830 | INFO | root | latency route=course cost=2445.25ms | request={"query": "是t1租户的课程吗？"}
+2025-11-18 23:01:51,317 | INFO | audit | vectors_add {"request_id": "44d59636-703b-4d4d-b680-08fb0bd0a413", "added": 1, "skipped": 0, "ids": ["t1_demo_entry_001"]}
+2025-11-18 23:02:21,745 | INFO | root | latency route=direct cost=2666.28ms | request={"query": "?t1???????"}
+2025-11-18 23:02:32,337 | INFO | root | latency route=direct cost=2550.59ms | request={"query": "?t1???????"}
+2025-11-18 23:03:01,916 | INFO | root | latency route=direct cost=2461.30ms | request={"query": "????t1??????"}
+2025-11-18 23:03:33,374 | INFO | root | latency route=direct cost=2729.98ms | request={"query": "?? t1 ????"}
+2025-11-18 23:03:50,556 | INFO | root | latency route=course cost=2763.51ms | request={"query": "是t1租户的课程吗？"}
+2025-11-18 23:06:53,492 | INFO | root | latency route=direct cost=2587.73ms | request={"query": "?t1???????"}
+2025-11-18 23:07:05,245 | INFO | root | latency route=direct cost=2724.56ms | request={"query": "?? ?? t1"}
+2025-11-18 23:07:29,164 | INFO | root | latency route=direct cost=2521.68ms | request={"query": "????????"}
+2025-11-18 23:08:32,169 | INFO | root | latency route=course cost=2406.09ms | request={"query": "是t1租户的课程吗？"}
+2025-11-18 23:10:29,176 | INFO | root | model switch apply new=qwen-turbo
+2025-11-18 23:10:41,953 | INFO | root | latency route=course cost=2657.54ms | request={"query": "是t1租户的课程吗？"}
+2025-11-18 23:22:33,188 | INFO | root | latency route=course cost=3203.74ms | request={"query": "是t1租户的课程吗？"}
+2025-11-19 00:56:16,449 | INFO | root | latency route=direct cost=4914.78ms | request={"query": "t1"}
+2025-11-19 16:15:26,362 | INFO | root | latency route=direct cost=4805.12ms | request={"query": "t1"}
+2025-11-19 16:15:51,102 | INFO | root | latency route=course cost=43.78ms | request={"query": "是租户t1的课程吗"}
+2025-11-19 16:16:13,005 | INFO | root | latency route=course cost=32.23ms | request={"query": "是租户t1的课程吗"}
+2025-11-19 16:16:19,809 | INFO | root | latency route=course cost=31.07ms | request={"query": "是租户t1的课程吗"}
+2025-11-19 16:18:16,617 | INFO | root | latency route=course cost=2918.34ms | request={"query": "t1 的 课程吗"}
+2025-11-19 16:19:51,178 | INFO | root | latency route=course cost=2779.87ms | request={"query": "t1 的 课程吗"}
+2025-11-19 16:26:22,208 | INFO | root | latency route=course cost=2711.62ms | request={"query": "t1课程的目录"}
+2025-11-19 16:27:26,651 | INFO | root | latency route=course cost=2773.04ms | request={"query": "是t1租户的课程吗？"}
+2025-11-19 16:29:47,831 | INFO | root | latency route=course cost=2929.16ms | request={"query": "是t1租户的课程吗？"}
+2025-11-19 20:32:35,719 | INFO | root | latency route=course cost=39.93ms | request={"query": "课程用到了哪些大模型工具"}
+2025-11-23 15:33:15,768 | INFO | root | latency route=direct cost=826.44ms | request={"query": "hi"}
+2025-11-23 15:33:30,270 | INFO | root | latency route=course cost=36.39ms | request={"query": "新手可以学吗？"}
+2025-11-23 15:33:53,383 | INFO | root | latency route=course cost=31.92ms | request={"query": "新手可以学吗？"}
+2025-11-23 15:40:45,425 | INFO | root | latency route=course cost=33.21ms | request={"query": "新手可以学吗？"}
+2025-11-23 15:55:00,022 | INFO | root | latency route=course cost=32.24ms | request={"query": "新手可以学吗？"}
+2025-11-23 15:55:53,564 | INFO | root | latency route=direct cost=1014.66ms | request={"query": "???????"}
+2025-11-23 15:56:05,357 | INFO | root | latency route=direct cost=887.54ms | request={"query": "???????"}
+2025-11-23 16:03:12,426 | INFO | root | latency route=course cost=25.56ms | request={"query": "新手可以学吗？"}
+2025-11-23 16:03:50,268 | INFO | root | latency route=course cost=32.31ms | request={"query": "新手可以学吗？"}
+2025-11-23 16:06:20,883 | INFO | root | latency route=direct cost=825.40ms | request={"query": "-H \"X-Tenant-ID: t1\""}
+2025-11-23 16:06:30,842 | INFO | root | latency route=course cost=25.71ms | request={"query": "新手可以学吗？"}
+2025-11-23 16:07:14,300 | INFO | root | latency route=course cost=1068.52ms | request={"query": "是t1租户的课程吗？"}
+2025-11-27 09:50:15,448 | INFO | root | latency route=direct cost=1491.15ms | request={"query": "你是什么 AI"}
+2025-11-27 09:50:42,159 | INFO | root | latency route=direct cost=1987.29ms | request={"query": "新入职的应届生能听懂吗"}
+2025-11-27 09:51:02,664 | INFO | root | latency route=direct cost=1115.58ms | request={"query": "新入职的应届生能听懂吗？"}
+2025-11-27 09:51:15,110 | INFO | root | latency route=direct cost=2297.63ms | request={"query": "我是从工程师转管理岗的，还能学得动吗？"}
+2025-11-27 09:52:13,772 | INFO | root | latency route=direct cost=1588.61ms | request={"query": "我是从工程师转管理岗的，还能学得动吗？"}
+2025-11-27 09:52:39,784 | INFO | root | latency route=direct cost=862.13ms | request={"query": "这门课适合零基础吗？"}
+2025-11-27 09:52:42,073 | INFO | root | latency route=direct cost=1189.18ms | request={"query": "我是从工程师转管理岗的，还能学得动吗？"}
+2025-11-27 09:52:46,879 | INFO | root | latency route=course cost=26.51ms | request={"query": "课程用什么技术栈？LangChain还是LlamaIndex？"}
+2025-11-27 09:53:03,289 | INFO | root | latency route=direct cost=1451.71ms | request={"query": "这门课适合零基\n础吗？"}
+2025-11-27 09:53:15,933 | INFO | root | latency route=direct cost=960.73ms | request={"query": "这门课适合零基础吗？"}
+2025-11-27 09:54:05,609 | INFO | root | latency route=course cost=15.65ms | request={"query": "课程用LangChain还是LlamaIndex？"}
+2025-11-27 09:54:20,692 | INFO | root | latency route=course cost=14.29ms | request={"query": "这门课程适合零基础吗？"}
+2025-11-27 09:54:46,452 | INFO | root | latency route=course cost=785.05ms | request={"query": "这门课程适合零\n基础吗？"}
+2025-11-27 09:54:51,333 | INFO | root | latency route=course cost=690.76ms | request={"query": "这门课程适合零基础吗？"}
+2025-11-27 09:54:53,739 | INFO | root | latency route=course cost=911.73ms | request={"query": "这门课程适合零基础吗？"}
+2025-11-27 09:55:02,603 | INFO | root | latency route=course cost=766.55ms | request={"query": "课程用什么技术栈？"}
+2025-11-27 09:55:41,912 | INFO | root | latency route=course cost=1053.14ms | request={"query": "这门课程适合零基础吗？"}
+2025-11-27 10:02:45,195 | INFO | root | latency route=course cost=819.05ms | request={"query": "这门课程适合零基础吗？"}
+2025-11-27 15:34:32,053 | INFO | root | latency route=direct cost=1789.31ms | request={"query": "图片是什么"}
+2025-11-27 15:34:54,357 | INFO | root | latency route=direct cost=1499.59ms | request={"query": "解释我上传的图片中的内容"}
+2025-11-27 15:35:06,991 | INFO | root | latency route=direct cost=955.63ms | request={"query": "解释我我上传的图片中的内容"}
+2025-11-27 15:44:45,907 | INFO | root | latency route=course cost=3099.37ms | request={"query": "这个课程适合我吗？"}
+2025-11-27 15:52:47,995 | INFO | root | latency route=direct cost=1930.95ms | request={"query": "新入职的应届生能听懂吗"}
+2025-11-27 15:53:03,817 | INFO | root | latency route=direct cost=1287.08ms | request={"query": "新入职的应届生能听懂吗？"}
+2025-11-27 15:53:17,958 | INFO | root | latency route=course cost=989.16ms | request={"query": "Q：课程会不会讲太多理论，脱离实际开发？"}
+2025-11-27 15:53:29,149 | INFO | root | latency route=direct cost=1061.98ms | request={"query": "Q：新入职的应届生能听懂吗"}
+2025-11-27 15:53:35,341 | INFO | root | latency route=direct cost=1129.10ms | request={"query": "Q：新入职的应届生能听懂吗？"}
+2025-11-27 15:53:46,430 | INFO | root | latency route=direct cost=1120.21ms | request={"query": "Q：新入职的应届生能听懂吗？"}
+2025-11-27 15:53:55,862 | INFO | root | latency route=course cost=965.12ms | request={"query": "Q：课程有没有证书？对企业内训有用吗？"}
+2025-11-27 16:22:15,060 | INFO | root | latency route=human cost=83.07ms | request={"query": "转人工"}
+2025-11-27 16:27:01,123 | INFO | root | latency route=human cost=109.75ms | request={"query": "转人工"}
+2025-11-27 16:34:57,423 | INFO | root | latency route=course cost=1494.92ms | request={"query": "课程咨询"}
+2025-11-27 16:35:06,657 | INFO | root | latency route=order cost=2438.32ms | request={"query": "订单查询"}
+2025-11-27 16:35:44,724 | INFO | root | latency route=course cost=972.33ms | request={"query": "课程咨询"}
+2025-11-27 16:36:11,093 | INFO | root | latency route=course cost=985.74ms | request={"query": "课程咨询"}
+2025-11-27 16:36:44,201 | INFO | root | latency route=course cost=1042.92ms | request={"query": "课程咨询"}
+2025-11-27 16:36:53,741 | INFO | root | latency route=course cost=1068.39ms | request={"query": "课程咨询"}
+2025-11-27 16:37:35,923 | INFO | root | latency route=course cost=1034.83ms | request={"query": "课程咨询"}
+2025-11-27 16:37:57,173 | INFO | root | latency route=course cost=899.00ms | request={"query": "课程咨询"}
+2025-11-27 16:38:24,261 | INFO | root | latency route=course cost=1086.00ms | request={"query": "课程咨询"}
+2025-11-27 16:39:24,177 | INFO | root | latency route=course cost=1059.42ms | request={"query": "课程咨询"}
