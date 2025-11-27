@@ -1,0 +1,41 @@
+{
+    "name": "react-go-admin",
+    "private": true,
+    "version": "1.0.0",
+    "type": "module",
+    "description": "React管理系统 + AI智能客服",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+    },
+    "dependencies": {
+        "@ant-design/icons": "^5.4.0",
+        "antd": "^5.20.0",
+        "axios": "^1.7.0",
+        "dayjs": "^1.11.13",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-image-crop": "^11.0.10",
+        "react-markdown": "^10.1.0",
+        "react-router-dom": "^6.26.0",
+        "recorder-js": "^1.0.7",
+        "uuid": "^13.0.0",
+        "zustand": "^5.0.8"
+    },
+    "devDependencies": {
+        "@tailwindcss/postcss": "^4.1.17",
+        "@types/react": "^18.3.3",
+        "@types/react-dom": "^18.3.0",
+        "@vitejs/plugin-react": "^4.3.1",
+        "autoprefixer": "^10.4.22",
+        "eslint": "^8.57.0",
+        "eslint-plugin-react": "^7.34.3",
+        "eslint-plugin-react-hooks": "^4.6.2",
+        "eslint-plugin-react-refresh": "^0.4.7",
+        "postcss": "^8.5.6",
+        "tailwindcss": "^4.1.17",
+        "vite": "^5.3.4"
+    }
+}
