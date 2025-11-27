@@ -11,7 +11,7 @@ export default defineConfig({
         },
     },
     server: {
-        port: 5173,
+        port: 5174,
         proxy: {
             // Python 后端 API 代理
             '/api': {

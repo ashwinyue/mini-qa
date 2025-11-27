@@ -30,6 +30,8 @@ import RoleList from '../pages/role/RoleList'
 import Settings from '../pages/Settings'
 import Profile from '../pages/Profile'
 import NotFound from '../pages/NotFound'
+// 导入 AI 功能页面
+import { ChatPage, KnowledgeBasePage, OrdersPage, TenantsPage } from '../pages/ai'
 
 const AppRouter = () => {
     return (
@@ -65,7 +67,7 @@ const AppRouter = () => {
                     - Navigate to="/dashboard" replace: 重定向到 /dashboard 路径
                     - replace: 使用 replace 模式，不会在浏览器历史中留下记录
                 */}
-                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route index element={<Navigate to="/ai/chat" replace />} />
 
                 {/* 
                     仪表盘页面
@@ -105,6 +107,20 @@ const AppRouter = () => {
                     - element={<Profile />}: 渲染 Profile 组件
                 */}
                 <Route path="profile" element={<Profile />} />
+
+                {/* 
+                    AI 功能模块
+                    - /ai/chat: 智能对话
+                    - /ai/kb: 知识库查询
+                    - /ai/orders: 订单查询
+                    - /ai/tenants: 租户管理
+                */}
+                <Route path="ai">
+                    <Route path="chat" element={<ChatPage />} />
+                    <Route path="kb" element={<KnowledgeBasePage />} />
+                    <Route path="orders" element={<OrdersPage />} />
+                    <Route path="tenants" element={<TenantsPage />} />
+                </Route>
 
             </Route>
 

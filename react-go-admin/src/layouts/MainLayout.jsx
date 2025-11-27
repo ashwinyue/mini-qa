@@ -33,9 +33,12 @@ import {
     MenuUnfoldOutlined,  // 展开菜单图标
     UserOutlined,        // 用户图标
     LogoutOutlined,      // 登出图标
-    DashboardOutlined,   // 仪表盘图标
     TeamOutlined,        // 团队图标
-    SettingOutlined      // 设置图标
+    SettingOutlined,     // 设置图标
+    MessageOutlined,     // 消息图标
+    DatabaseOutlined,    // 数据库图标
+    ShoppingOutlined,    // 购物图标
+    ApartmentOutlined    // 组织图标
 } from '@ant-design/icons'
 
 // 导入认证相关的 Hook 和工具函数
@@ -84,19 +87,22 @@ const MainLayout = () => {
     React.useEffect(() => {
         const path = location.pathname
         // 根据不同路径设置对应的菜单项
-        if (path.startsWith('/dashboard')) {
-            setSelectedKeys(['dashboard'])
-            setOpenKeys([])
+        if (path.startsWith('/ai/chat')) {
+            setSelectedKeys(['ai-chat'])
+        } else if (path.startsWith('/ai/kb')) {
+            setSelectedKeys(['ai-kb'])
+        } else if (path.startsWith('/ai/orders')) {
+            setSelectedKeys(['ai-orders'])
+        } else if (path.startsWith('/ai/tenants')) {
+            setSelectedKeys(['ai-tenants'])
         } else if (path.startsWith('/system/user')) {
             setSelectedKeys(['user-list'])
-            setOpenKeys(['system'])
         } else if (path.startsWith('/system/role')) {
             setSelectedKeys(['role-list'])
-            setOpenKeys(['system'])
         } else if (path.startsWith('/settings')) {
             setSelectedKeys(['settings'])
-            setOpenKeys([])
         }
+        setOpenKeys([])
     }, [location])
 
     /**
@@ -110,27 +116,40 @@ const MainLayout = () => {
      */
     const menuItems = [
         {
-            key: 'dashboard',              // 菜单项的唯一标识
-            icon: <DashboardOutlined />,   // 菜单项图标
-            label: '仪表盘',                // 菜单项文本
-            onClick: () => navigate('/dashboard')  // 点击时的导航操作
+            key: 'ai-chat',
+            icon: <MessageOutlined />,
+            label: '智能对话',
+            onClick: () => navigate('/ai/chat')
         },
         {
-            key: 'system',
+            key: 'ai-kb',
+            icon: <DatabaseOutlined />,
+            label: '知识库查询',
+            onClick: () => navigate('/ai/kb')
+        },
+        {
+            key: 'ai-orders',
+            icon: <ShoppingOutlined />,
+            label: '订单查询',
+            onClick: () => navigate('/ai/orders')
+        },
+        {
+            key: 'ai-tenants',
+            icon: <ApartmentOutlined />,
+            label: '租户管理',
+            onClick: () => navigate('/ai/tenants')
+        },
+        {
+            key: 'user-list',
             icon: <TeamOutlined />,
-            label: '系统管理',
-            children: [
-                {
-                    key: 'user-list',
-                    label: '用户管理',
-                    onClick: () => navigate('/system/user')
-                },
-                {
-                    key: 'role-list',
-                    label: '角色管理',
-                    onClick: () => navigate('/system/role')
-                }
-            ]
+            label: '用户管理',
+            onClick: () => navigate('/system/user')
+        },
+        {
+            key: 'role-list',
+            icon: <TeamOutlined />,
+            label: '角色管理',
+            onClick: () => navigate('/system/role')
         },
         {
             key: 'settings',
@@ -182,15 +201,16 @@ const MainLayout = () => {
                 width={240}                // 展开时的宽度
                 collapsedWidth={80}        // 折叠时的宽度
             >
-                {/* Logo/标题区域 - 隐藏，因为标题已移到顶部 */}
+                {/* Logo/标题区域 */}
                 <div className={`h-16 px-4 flex items-center ${collapsed ? 'justify-center' : 'justify-start'}`} style={{ background: '#001529' }}>
-                    {/* 根据折叠状态显示不同内容 */}
                     {collapsed ? (
                         <div className="w-8 h-8 rounded-md flex items-center justify-center text-white font-bold" style={{ background: '#1677ff' }}>
-                            R
+                            AI
                         </div>
                     ) : (
-                        <div style={{ height: '64px' }}></div>
+                        <Text style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff' }}>
+                            AI 智能客服
+                        </Text>
                     )}
                 </div>
 
@@ -226,9 +246,7 @@ const MainLayout = () => {
                             onClick={() => setCollapsed(!collapsed)}
                             style={{ fontSize: '18px', width: '48px', height: '48px', color: '#001529' }}
                         />
-                        <Text style={{ fontSize: '18px', fontWeight: 'bold', marginLeft: '16px', color: '#001529' }}>
-                            React管理系统
-                        </Text>
+
                     </div>
 
                     {/* 右侧：用户信息和操作 */}

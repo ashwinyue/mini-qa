@@ -2,10 +2,18 @@
 
 提供 `/chat` 对话接口与 `/health` 健康检查，支持请求 ID 中间件。
 """
+import os
+import dotenv
+from pathlib import Path
+
+# 必须在导入 langchain 之前加载 .env
+# 从项目根目录加载 .env
+_env_path = Path(__file__).parent.parent / ".env"
+dotenv.load_dotenv(_env_path)
+
 import logging
 import uuid
 import time
-import os
 import json
 import sqlite3
 import hashlib
@@ -214,7 +222,9 @@ def _determine_answer(result: Dict[str, Any]):
     if order:
         answer = order
     elif human:
-        answer = human
+        # 将转人工对象转为友好提示文字
+        channel = human.get("channel", "default") if isinstance(human, dict) else "default"
+        answer = f"正在为您转接人工客服，请稍候..."
     elif kb:
         answer = kb
     else:
@@ -272,14 +282,15 @@ async def chat(req: ChatRequest, request: Request):
     history.extend(f"{m.get('role')}: {m.get('content')}" for m in session_msgs)
     tenant_id = request.headers.get("X-Tenant-ID") or request.query_params.get("tenant") or "default"
     state: Dict[str, Any] = {"query": query_text, "history": "\n".join(history), "tenant_id": tenant_id}
+    # 传递图片到 state
+    if req.images:
+        state["images"] = req.images
     cfg = {"configurable": {"thread_id": thread_id}}
     if query_text:
         config.append_session_message(thread_id, "user", query_text)
     need_vl = bool(getattr(req, "images", None))
-    t = query_text.lower()
-    is_kb = any(k in t for k in ["课程", "售前", "售后", "新手"])
-    is_order = any(k in t for k in ["订单", "支付", "退款", "order", "status"])
-    use_vl = need_vl and (is_kb or is_order)
+    # 有图片时始终启用视觉模型
+    use_vl = need_vl
     prev_llm = getattr(graph, "llm", None)
     prev_router = getattr(graph, "router_llm", None)
     prev_sql = getattr(graph, "sql_llm", None)
@@ -571,6 +582,198 @@ async def get_me(request: Request):
         raise HTTPException(status_code=401, detail="未登录")
     
     return _ok(user)
+
+
+# ============ 用户管理接口 ============
+
+class UserCreateRequest(BaseModel):
+    username: str
+    password: str
+    realname: str
+    email: Optional[str] = ""
+
+
+class UserUpdateRequest(BaseModel):
+    realname: Optional[str] = None
+    email: Optional[str] = None
+    status: Optional[int] = None
+    password: Optional[str] = None
+
+
+@app.get("/api/users")
+async def get_users(
+    request: Request,
+    page: int = 1,
+    pageSize: int = 10,
+    keyword: str = ""
+):
+    """获取用户列表"""
+    user = get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="未登录")
+    
+    result = auth.get_user_list(page, pageSize, keyword)
+    return _ok(result)
+
+
+@app.get("/api/users/{user_id}")
+async def get_user(user_id: int, request: Request):
+    """获取用户详情"""
+    user = get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="未登录")
+    
+    result = auth.get_user_by_id(user_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="用户不存在")
+    
+    return _ok(result)
+
+
+@app.post("/api/users")
+async def create_user_api(req: UserCreateRequest, request: Request):
+    """创建用户"""
+    user = get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="未登录")
+    
+    result = auth.create_user_full(req.username, req.password, req.realname, req.email or "")
+    if not result.get("ok"):
+        raise HTTPException(status_code=400, detail=result.get("error", "创建失败"))
+    
+    return _ok({"id": result.get("id"), "message": "创建成功"})
+
+
+@app.put("/api/users/{user_id}")
+async def update_user_api(user_id: int, req: UserUpdateRequest, request: Request):
+    """更新用户"""
+    user = get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="未登录")
+    
+    data = {}
+    if req.realname is not None:
+        data["realname"] = req.realname
+    if req.email is not None:
+        data["email"] = req.email
+    if req.status is not None:
+        data["status"] = req.status
+    if req.password:
+        data["password"] = req.password
+    
+    result = auth.update_user(user_id, data)
+    if not result.get("ok"):
+        raise HTTPException(status_code=400, detail=result.get("error", "更新失败"))
+    
+    return _ok({"message": "更新成功"})
+
+
+@app.delete("/api/users/{user_id}")
+async def delete_user_api(user_id: int, request: Request):
+    """删除用户"""
+    user = get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="未登录")
+    
+    result = auth.delete_user(user_id)
+    if not result.get("ok"):
+        raise HTTPException(status_code=400, detail=result.get("error", "删除失败"))
+    
+    return _ok({"message": "删除成功"})
+
+
+# ============ 角色管理接口 ============
+
+class RoleCreateRequest(BaseModel):
+    name: str
+    code: str
+    description: Optional[str] = ""
+
+
+class RoleUpdateRequest(BaseModel):
+    name: Optional[str] = None
+    code: Optional[str] = None
+    description: Optional[str] = None
+
+
+@app.get("/api/roles")
+async def get_roles(
+    request: Request,
+    page: int = 1,
+    pageSize: int = 10,
+    keyword: str = ""
+):
+    """获取角色列表"""
+    user = get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="未登录")
+    
+    result = auth.get_role_list(page, pageSize, keyword)
+    return _ok(result)
+
+
+@app.get("/api/roles/{role_id}")
+async def get_role(role_id: int, request: Request):
+    """获取角色详情"""
+    user = get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="未登录")
+    
+    result = auth.get_role_by_id(role_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="角色不存在")
+    
+    return _ok(result)
+
+
+@app.post("/api/roles")
+async def create_role_api(req: RoleCreateRequest, request: Request):
+    """创建角色"""
+    user = get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="未登录")
+    
+    result = auth.create_role(req.name, req.code, req.description or "")
+    if not result.get("ok"):
+        raise HTTPException(status_code=400, detail=result.get("error", "创建失败"))
+    
+    return _ok({"id": result.get("id"), "message": "创建成功"})
+
+
+@app.put("/api/roles/{role_id}")
+async def update_role_api(role_id: int, req: RoleUpdateRequest, request: Request):
+    """更新角色"""
+    user = get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="未登录")
+    
+    data = {}
+    if req.name is not None:
+        data["name"] = req.name
+    if req.code is not None:
+        data["code"] = req.code
+    if req.description is not None:
+        data["description"] = req.description
+    
+    result = auth.update_role(role_id, data)
+    if not result.get("ok"):
+        raise HTTPException(status_code=400, detail=result.get("error", "更新失败"))
+    
+    return _ok({"message": "更新成功"})
+
+
+@app.delete("/api/roles/{role_id}")
+async def delete_role_api(role_id: int, request: Request):
+    """删除角色"""
+    user = get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="未登录")
+    
+    result = auth.delete_role(role_id)
+    if not result.get("ok"):
+        raise HTTPException(status_code=400, detail=result.get("error", "删除失败"))
+    
+    return _ok({"message": "删除成功"})
 
 
 if __name__ == "__main__":

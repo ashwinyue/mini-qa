@@ -312,11 +312,27 @@ def order_node(state: State) -> Dict[str, Any]:
 
 
 def direct_node(state: State) -> Dict[str, Any]:
-    """直答节点：不依赖 KB 的简要回答。"""
+    """直答节点：不依赖 KB 的简要回答，支持图片理解。"""
     q = state.get("query", "")
     h = state.get("history", "")
+    images = state.get("images") or []
     prefix = ("最近对话摘要：\n" + h + "\n\n") if h else ""
-    msg = llm.invoke(prefix + DIRECT_PROMPT_TEMPLATE.format(question=q))
+    prompt_text = prefix + DIRECT_PROMPT_TEMPLATE.format(question=q)
+    
+    # 如果有图片，构建多模态消息（通义千问格式）
+    if images:
+        from langchain_core.messages import HumanMessage
+        content_parts = []
+        # 添加图片 - 通义千问使用 image 类型
+        for img in images:
+            # 支持 data:image/xxx;base64,xxx 格式
+            content_parts.append({"image": img})
+        # 添加文本
+        content_parts.append({"text": prompt_text})
+        msg = llm.invoke([HumanMessage(content=content_parts)])
+    else:
+        msg = llm.invoke(prompt_text)
+    
     content = str(getattr(msg, "content", msg)).strip()
     return {"kb_answer": content}
 

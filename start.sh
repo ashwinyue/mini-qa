@@ -7,7 +7,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 echo -e "${YELLOW}==> 构建 FAISS 索引...${NC}"
-cd work_v3 && ../venv/bin/python rag-train.py
+cd work_v3 && ../.venv_new/bin/python rag-train.py
 echo -e "${YELLOW}==> 为默认租户创建索引副本...${NC}"
 mkdir -p tenants/default/faiss_index
 cp faiss_index/* tenants/default/faiss_index/
@@ -18,13 +18,13 @@ echo -e "${GREEN}✅ 索引构建完成${NC}"
 mkdir -p logs
 
 echo -e "\n${YELLOW}==> 启动后端服务 (http://localhost:8000)...${NC}"
-nohup ./venv/bin/python work_v3/app.py > logs/backend.log 2>&1 &
+nohup ./.venv_new/bin/python work_v3/app.py > logs/backend.log 2>&1 &
 echo $! > logs/backend.pid
 sleep 2
 echo -e "${GREEN}✅ 后端服务已启动 (PID: $(cat logs/backend.pid))${NC}"
 
 echo -e "\n${YELLOW}==> 启动前端服务 (http://localhost:5174)...${NC}"
-cd frontend
+cd react-go-admin
 nohup npm run dev > ../logs/frontend.log 2>&1 &
 echo $! > ../logs/frontend.pid
 cd ..

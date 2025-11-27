@@ -91,31 +91,24 @@ request.interceptors.response.use(
         /**
          * 解构响应数据
          * 
-         * 假设服务器返回的数据结构为：
+         * 服务器返回的数据结构为：
          * {
-         *   code: 200,           // 业务状态码
+         *   code: 0,             // 业务状态码（0 表示成功）
          *   data: {...},         // 实际数据
-         *   msg: "操作成功"       // 提示消息
+         *   message: "OK"        // 提示消息
          * }
          */
-        const { code, data, msg } = response.data
+        const { code, data, message: msg } = response.data
 
         /**
          * 根据业务状态码处理响应
-         * 
-         * 常见的业务状态码约定：
-         * - 200: 成功
-         * - 400: 请求参数错误
-         * - 401: 未授权
-         * - 403: 权限不足
-         * - 404: 资源不存在
-         * - 500: 服务器内部错误
+         * code === 0 表示成功
          */
-        if (code === 200) {
+        if (code === 0) {
             // 成功时返回实际数据，调用者可以直接使用
             return data
         } else {
-            // 非 200 状态码，视为业务错误
+            // 非 0 状态码，视为业务错误
             // 显示错误消息
             message.error(msg || '请求失败')
             // 抛出错误，让调用者可以捕获

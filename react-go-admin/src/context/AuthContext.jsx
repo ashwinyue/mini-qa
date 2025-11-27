@@ -72,8 +72,8 @@ export const AuthProvider = ({ children }) => {
    * 如果有，则获取用户信息并更新状态
    */
   useEffect(() => {
-    // 从 localStorage 中获取 token
-    const token = localStorage.getItem('token')
+    // 从 localStorage 中获取 token (使用 Python 后端的 key)
+    const token = localStorage.getItem('auth_token')
     if (token) {
       // 如果存在 token，说明用户之前已经登录过
       // 尝试获取当前用户信息
@@ -101,8 +101,9 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       // 获取用户信息失败，可能 token 已过期
       console.error('获取用户信息失败:', error)
-      // 清除过期的 token
-      localStorage.removeItem('token')
+      // 清除过期的 token (使用 Python 后端的 key)
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('user_info')
       logout() // Use store logout action which clears state
     } finally {
       // 无论成功或失败，都要结束加载状态

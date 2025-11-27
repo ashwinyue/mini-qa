@@ -6,9 +6,16 @@
 - 提供向量索引、订单数据库与图检查点的获取函数
 """
 import os
+import dotenv
+from pathlib import Path
+
+# 必须在导入 langchain 之前加载 .env
+# 从项目根目录加载 .env
+_env_path = Path(__file__).parent.parent / ".env"
+dotenv.load_dotenv(_env_path)
+
 import logging
 from typing import Optional
-import dotenv
 from collections import deque
 import threading
 import json
@@ -19,8 +26,6 @@ from langchain_community.chat_models import ChatTongyi
 from langchain_community.embeddings import DashScopeEmbeddings
 from langchain_community.vectorstores import FAISS
 from langgraph.checkpoint.memory import InMemorySaver
-
-dotenv.load_dotenv()
 
 MODEL_NAME = os.getenv("MODEL_NAME", "qwen-turbo")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-v4")

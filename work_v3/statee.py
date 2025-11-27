@@ -19,6 +19,7 @@ class State(TypedDict, total=False):
     - human_handoff：转人工时的渠道与载荷
     - route：最终路由落点（冗余字段，便于返回）
     - tenant_id：当前租户标识
+    - images：用户上传的图片列表（Base64 编码）
     """
     query: str
     history: str
@@ -29,3 +30,4 @@ class State(TypedDict, total=False):
     human_handoff: Dict[str, Any]
     route: str
     tenant_id: str
+    images: List[str]

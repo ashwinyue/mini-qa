@@ -97,7 +97,9 @@ const Login = () => {
              * - API 返回业务错误
              */
             console.error('登录失败:', error)
-            // 注意：这里没有显示错误消息，因为错误拦截器已经在 request.js 中处理了
+            // 显示错误消息
+            const errorMsg = error.response?.data?.detail || error.message || '登录失败，请重试'
+            message.error(errorMsg)
 
         } finally {
             // 无论成功或失败，都要清除加载状态
@@ -149,7 +151,7 @@ const Login = () => {
                 <Form
                     name="login"
                     // 演示用的初始值，生产环境中应该删除
-                    initialValues={{ username: 'admin', password: '123456' }}
+                    initialValues={{ username: 'admin', password: 'admin123' }}
                     onFinish={onFinish}
                     autoComplete="off"
                     size="large"
@@ -229,7 +231,7 @@ const Login = () => {
                  * 仅用于演示，生产环境中应该删除
                  */}
                 <div className="text-center text-gray-500 text-xs">
-                    默认账号：admin / 123456
+                    默认账号：admin / admin123
                 </div>
             </Card>
         </div>
