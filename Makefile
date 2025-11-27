@@ -15,9 +15,9 @@ help:
 # 安装依赖
 install:
 	@echo "==> 创建 Python 虚拟环境..."
-	python3 -m venv venv
+	cd work_v3 && python3 -m venv venv
 	@echo "==> 安装 Python 依赖..."
-	./venv/bin/pip install -q fastapi uvicorn langchain langchain-community langchain-openai langgraph faiss-cpu python-dotenv pydantic dashscope redis mcp
+	work_v3/venv/bin/pip install -q fastapi uvicorn langchain langchain-community langchain-openai langgraph faiss-cpu python-dotenv pydantic dashscope redis mcp
 	@echo "==> 安装前端依赖..."
 	cd frontend && npm install
 	@echo "✅ 依赖安装完成"
@@ -25,7 +25,7 @@ install:
 # 构建 FAISS 索引
 build-index:
 	@echo "==> 构建 FAISS 索引..."
-	cd work_v3 && ../venv/bin/python3 rag-train.py
+	cd work_v3 && ./venv/bin/python3 rag-train.py
 	@echo "==> 为默认租户创建索引副本..."
 	mkdir -p work_v3/tenants/default/faiss_index
 	cp work_v3/faiss_index/* work_v3/tenants/default/faiss_index/

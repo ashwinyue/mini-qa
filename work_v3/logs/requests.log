@@ -195,3 +195,5 @@
 2025-11-27 16:37:57,173 | INFO | root | latency route=course cost=899.00ms | request={"query": "课程咨询"}
 2025-11-27 16:38:24,261 | INFO | root | latency route=course cost=1086.00ms | request={"query": "课程咨询"}
 2025-11-27 16:39:24,177 | INFO | root | latency route=course cost=1059.42ms | request={"query": "课程咨询"}
+2025-11-27 17:30:02,390 | INFO | root | latency route=direct cost=1105.81ms | request={"query": "是"}
+2025-11-27 17:30:09,616 | INFO | root | latency route=direct cost=818.75ms | request={"query": "是"}

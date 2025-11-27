@@ -1,0 +1,33 @@
+# 核心框架
+fastapi==0.121.2
+uvicorn==0.38.0
+python-dotenv==1.2.1
+python-multipart==0.0.20
+
+# LangChain 相关
+langchain==1.0.5
+langchain-community==0.4.1
+langchain-core==1.0.4
+langchain-openai==1.0.3
+langchain-text-splitters==1.0.0
+langgraph==1.0.3
+langgraph-checkpoint==3.0.1
+langsmith==0.4.42
+
+# 向量数据库
+faiss-cpu==1.12.0
+
+# 通义千问
+dashscope==1.25.1
+
+# 数据处理
+pydantic==2.12.4
+pydantic-settings==2.12.0
+SQLAlchemy==2.0.44
+
+# MCP
+mcp==1.21.1
+
+# 工具库
+requests==2.32.5
+httpx==0.28.1
