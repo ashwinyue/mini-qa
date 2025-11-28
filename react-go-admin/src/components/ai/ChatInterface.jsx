@@ -246,12 +246,14 @@ const ChatInterface = () => {
             return
         }
 
-        // 添加语音消息
+        // 添加语音消息（先显示占位符）
+        const audioMessageId = uuidv4()
         const audioMessage = {
-            id: uuidv4(),
+            id: audioMessageId,
             role: 'user',
             content: `[语音消息 - 时长: ${Math.round(duration)}秒]`,
             timestamp: new Date().toISOString(),
+            isAudio: true,
         }
         addMessage(audioMessage)
         setLoading(true)
@@ -259,6 +261,14 @@ const ChatInterface = () => {
         // 发送语音消息 - query 为空，让后端使用语音识别结果
         sendMessage('', threadId, undefined, audioData)
             .then(response => {
+                // 如果后端返回了语音识别文本，更新用户消息
+                if (response.audio_text) {
+                    updateMessage(audioMessageId, {
+                        content: response.audio_text,
+                        audioText: response.audio_text,
+                    })
+                }
+                
                 const assistantMessage = {
                     id: uuidv4(),
                     role: 'assistant',
@@ -398,6 +408,7 @@ const ChatInterface = () => {
                     <AudioRecorder
                         onRecord={handleAudioRecorded}
                         onCancel={() => setShowAudioRecorder(false)}
+                        autoStart={true}
                     />
                 )}
 

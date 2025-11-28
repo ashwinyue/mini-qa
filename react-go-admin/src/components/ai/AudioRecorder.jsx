@@ -13,8 +13,9 @@ import { AudioOutlined, StopOutlined, CloseOutlined } from '@ant-design/icons'
  * @param {Object} props
  * @param {Function} props.onRecord - 录制完成回调，参数为 (audioData, duration)
  * @param {Function} props.onCancel - 取消回调
+ * @param {boolean} props.autoStart - 是否自动开始录音
  */
-const AudioRecorder = ({ onRecord, onCancel }) => {
+const AudioRecorder = ({ onRecord, onCancel, autoStart = false }) => {
     const [isRecording, setIsRecording] = useState(false)
     const [duration, setDuration] = useState(0)
     const [error, setError] = useState(null)
@@ -32,6 +33,14 @@ const AudioRecorder = ({ onRecord, onCancel }) => {
             }
         }
     }, [])
+
+    // 自动开始录音
+    useEffect(() => {
+        if (autoStart) {
+            startRecording()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [autoStart])
 
     // 开始录制
     const startRecording = async () => {
@@ -81,7 +90,30 @@ const AudioRecorder = ({ onRecord, onCancel }) => {
 
         } catch (err) {
             console.error('录音失败:', err)
-            setError('无法访问麦克风，请检查权限设置')
+            console.error('错误类型:', err.name)
+            console.error('错误信息:', err.message)
+            
+            let errorMessage = '无法访问麦克风'
+            
+            if (err.name === 'NotAllowedError') {
+                errorMessage = '麦克风权限被拒绝。请在浏览器地址栏左侧点击锁图标，允许麦克风访问'
+            } else if (err.name === 'NotFoundError') {
+                // macOS 特殊处理
+                const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
+                if (isMac) {
+                    errorMessage = '未找到麦克风设备。\n\nmacOS 用户请检查：\n1. 打开"系统设置" → "隐私与安全性" → "麦克风"\n2. 确保浏览器已被授权\n3. 重启浏览器后重试'
+                } else {
+                    errorMessage = '未找到麦克风设备。请检查麦克风是否已连接'
+                }
+            } else if (err.name === 'NotReadableError') {
+                errorMessage = '麦克风被其他应用占用。请关闭其他使用麦克风的应用'
+            } else if (err.name === 'OverconstrainedError') {
+                errorMessage = '麦克风不支持所需的配置'
+            } else if (err.name === 'SecurityError') {
+                errorMessage = '安全限制：请确保使用 HTTPS 或 localhost 访问'
+            }
+            
+            setError(errorMessage)
         }
     }
 
@@ -123,7 +155,26 @@ const AudioRecorder = ({ onRecord, onCancel }) => {
     return (
         <div className="p-4 bg-gray-50 rounded-lg mt-2">
             {error ? (
-                <div className="text-red-500 text-center">{error}</div>
+                <div className="flex flex-col items-center gap-3">
+                    <div className="text-red-500 text-center whitespace-pre-line text-sm max-w-md">
+                        {error}
+                    </div>
+                    <Space>
+                        <Button
+                            type="primary"
+                            icon={<AudioOutlined />}
+                            onClick={startRecording}
+                        >
+                            重试
+                        </Button>
+                        <Button
+                            icon={<CloseOutlined />}
+                            onClick={onCancel}
+                        >
+                            关闭
+                        </Button>
+                    </Space>
+                </div>
             ) : (
                 <div className="flex flex-col items-center gap-3">
                     {/* 录制状态指示 */}
@@ -148,15 +199,7 @@ const AudioRecorder = ({ onRecord, onCancel }) => {
 
                     {/* 控制按钮 */}
                     <Space>
-                        {!isRecording ? (
-                            <Button
-                                type="primary"
-                                icon={<AudioOutlined />}
-                                onClick={startRecording}
-                            >
-                                开始录音
-                            </Button>
-                        ) : (
+                        {isRecording ? (
                             <Button
                                 type="primary"
                                 danger
@@ -165,6 +208,16 @@ const AudioRecorder = ({ onRecord, onCancel }) => {
                             >
                                 停止录音
                             </Button>
+                        ) : (
+                            !autoStart && (
+                                <Button
+                                    type="primary"
+                                    icon={<AudioOutlined />}
+                                    onClick={startRecording}
+                                >
+                                    开始录音
+                                </Button>
+                            )
                         )}
                         <Button
                             icon={<CloseOutlined />}

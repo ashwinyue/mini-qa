@@ -247,3 +247,6 @@
 2025-11-28 10:09:25,089 | INFO | root | latency route=direct cost=1200.27ms | request={"query": "data.txt"}
 2025-11-28 10:09:31,475 | INFO | root | latency route=course cost=813.61ms | request={"query": "课程会更新吗？"}
 2025-11-28 10:22:49,654 | INFO | root | latency route=direct cost=2917.97ms | request={"query": ""}
+2025-11-28 10:32:04,258 | INFO | root | latency route=direct cost=2096.71ms | request={"query": ""}
+2025-11-28 10:35:09,511 | INFO | root | latency route=direct cost=2122.24ms | request={"query": ""}
+2025-11-28 10:35:32,712 | INFO | root | latency route=direct cost=1465.86ms | request={"query": ""}

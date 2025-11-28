@@ -318,8 +318,11 @@ async def chat(req: ChatRequest, request: Request):
     # 异步启动建议问题推送，不阻塞主流程
     if asyncio is not None:
         asyncio.create_task(_push_suggest(thread_id, query_text, answer, route))
-    # 返回路由、答案与来源
-    return {"route": route, "answer": answer, "sources": sources}
+    # 返回路由、答案与来源，如果有语音识别文本也返回
+    response = {"route": route, "answer": answer, "sources": sources}
+    if audio_text:
+        response["audio_text"] = audio_text
+    return response
 
 
 @app.get("/models/list")
