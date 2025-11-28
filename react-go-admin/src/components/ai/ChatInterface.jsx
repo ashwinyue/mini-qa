@@ -203,6 +203,41 @@ const ChatInterface = () => {
         }
     }
 
+    const handlePaste = async (e) => {
+        const items = e.clipboardData?.items
+        if (!items) return
+
+        const imageFiles = []
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i]
+            if (item.type.indexOf('image') !== -1) {
+                const file = item.getAsFile()
+                if (file) {
+                    imageFiles.push(file)
+                }
+            }
+        }
+
+        if (imageFiles.length > 0) {
+            e.preventDefault()
+            
+            // 转换为 Base64
+            const base64Images = await Promise.all(
+                imageFiles.map(file => {
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader()
+                        reader.onload = (e) => resolve(e.target.result)
+                        reader.onerror = reject
+                        reader.readAsDataURL(file)
+                    })
+                })
+            )
+
+            setUploadedImages(prev => [...prev, ...base64Images])
+            antMessage.success(`已粘贴 ${imageFiles.length} 张图片`)
+        }
+    }
+
     const handleAudioRecorded = (audioData, duration) => {
         setShowAudioRecorder(false)
 
@@ -343,7 +378,8 @@ const ChatInterface = () => {
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder="输入消息，按 Enter 发送，Shift+Enter 换行..."
+                        onPaste={handlePaste}
+                        placeholder="输入消息，按 Enter 发送，Shift+Enter 换行，支持粘贴图片..."
                         autoSize={{ minRows: 1, maxRows: 4 }}
                         disabled={isLoading}
                         className="flex-1"

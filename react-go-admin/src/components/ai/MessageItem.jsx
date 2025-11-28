@@ -20,7 +20,7 @@ const { Text, Paragraph } = Typography
  * @param {Function} props.onSuggestionClick - 建议点击回调
  */
 const MessageItem = ({ message, onSuggestionClick }) => {
-    const { role, content: rawContent, timestamp, sources, suggestions, error, route } = message
+    const { role, content: rawContent, timestamp, sources, suggestions, error, route, images } = message
     
     // 确保 content 是字符串
     const content = typeof rawContent === 'string' 
@@ -45,7 +45,21 @@ const MessageItem = ({ message, onSuggestionClick }) => {
                             className="bg-blue-500 text-white px-4 py-2 rounded-lg rounded-tr-none"
                             style={{ wordBreak: 'break-word' }}
                         >
-                            {content}
+                            {/* 显示上传的图片 */}
+                            {images && images.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mb-2">
+                                    {images.map((image, index) => (
+                                        <img
+                                            key={index}
+                                            src={image}
+                                            alt={`上传图片 ${index + 1}`}
+                                            className="max-w-[200px] max-h-[200px] rounded object-cover"
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                            {/* 显示文本内容 */}
+                            {content && <div>{content}</div>}
                         </div>
                         {timeStr && (
                             <Text type="secondary" className="text-xs mt-1">
