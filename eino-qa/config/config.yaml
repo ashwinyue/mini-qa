@@ -1,0 +1,50 @@
+# Eino QA System Configuration
+
+server:
+  port: 8080
+  mode: debug  # debug, release
+
+dashscope:
+  api_key: ${DASHSCOPE_API_KEY}
+  chat_model: qwen-turbo  # qwen-turbo, qwen-plus, qwen-max
+  embed_model: text-embedding-v2
+  embedding_dimension: 1536  # 向量维度
+  max_retries: 3
+  timeout: 30s
+
+milvus:
+  host: localhost
+  port: 19530
+  username: ""
+  password: ""
+  timeout: 10s
+
+database:
+  base_path: ./data/db  # SQLite 数据库文件基础路径
+
+rag:
+  top_k: 5  # 检索返回的文档数量
+  score_threshold: 0.7  # 相似度阈值
+
+intent:
+  confidence_threshold: 0.6  # 意图识别置信度阈值
+
+session:
+  max_history: 10  # 最大会话历史消息数
+  timeout: 30m  # 会话超时时间
+
+security:
+  api_keys:
+    - ${API_KEY_1}
+    - ${API_KEY_2}
+  sensitive_fields:
+    - password
+    - id_card
+    - phone
+    - mobile
+
+logging:
+  level: info  # debug, info, warn, error
+  format: json  # json, text
+  output: stdout  # stdout, file
+  file_path: ./logs/app.log

@@ -1,0 +1,149 @@
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"time"
+
+	"eino-qa/internal/domain/entity"
+	"eino-qa/internal/infrastructure/config"
+	"eino-qa/internal/infrastructure/repository/milvus"
+
+	"github.com/sirupsen/logrus"
+)
+
+func main() {
+	// 创建日志器
+	logger := logrus.New()
+	logger.SetLevel(logrus.InfoLevel)
+
+	// 配置 Milvus
+	milvusConfig := config.MilvusConfig{
+		Host:     "localhost",
+		Port:     19530,
+		Username: "",
+		Password: "",
+		Timeout:  10 * time.Second,
+	}
+
+	// 创建 Milvus 工厂（向量维度为 1536，对应 DashScope text-embedding-v2）
+	factory, err := milvus.NewFactory(milvusConfig, 1536, logger)
+	if err != nil {
+		log.Fatalf("Failed to create Milvus factory: %v", err)
+	}
+	defer factory.Close()
+
+	// 创建向量仓储
+	vectorRepo := factory.CreateVectorRepository()
+
+	// 示例 1: 插入文档
+	fmt.Println("\n=== 示例 1: 插入文档 ===")
+	ctx := context.WithValue(context.Background(), "tenant_id", "test_tenant")
+
+	// 创建测试文档（实际使用中需要先生成向量）
+	docs := []*entity.Document{
+		{
+			ID:        "doc_001",
+			Content:   "Python 是一种高级编程语言",
+			Vector:    generateDummyVector(1536), // 实际应使用嵌入模型生成
+			Metadata:  map[string]any{"category": "programming"},
+			TenantID:  "test_tenant",
+			CreatedAt: time.Now(),
+		},
+		{
+			ID:        "doc_002",
+			Content:   "Go 语言适合构建高性能服务",
+			Vector:    generateDummyVector(1536),
+			Metadata:  map[string]any{"category": "programming"},
+			TenantID:  "test_tenant",
+			CreatedAt: time.Now(),
+		},
+	}
+
+	err = vectorRepo.Insert(ctx, docs)
+	if err != nil {
+		log.Printf("Failed to insert documents: %v", err)
+	} else {
+		fmt.Printf("Successfully inserted %d documents\n", len(docs))
+	}
+
+	// 示例 2: 搜索相似文档
+	fmt.Println("\n=== 示例 2: 搜索相似文档 ===")
+	queryVector := generateDummyVector(1536)
+	results, err := vectorRepo.Search(ctx, queryVector, 5)
+	if err != nil {
+		log.Printf("Failed to search: %v", err)
+	} else {
+		fmt.Printf("Found %d similar documents:\n", len(results))
+		for i, doc := range results {
+			fmt.Printf("  %d. ID: %s, Score: %.4f, Content: %s\n",
+				i+1, doc.ID, doc.Score, doc.Content)
+		}
+	}
+
+	// 示例 3: 获取文档总数
+	fmt.Println("\n=== 示例 3: 获取文档总数 ===")
+	count, err := vectorRepo.Count(ctx)
+	if err != nil {
+		log.Printf("Failed to count: %v", err)
+	} else {
+		fmt.Printf("Total documents: %d\n", count)
+	}
+
+	// 示例 4: 根据 ID 获取文档
+	fmt.Println("\n=== 示例 4: 根据 ID 获取文档 ===")
+	doc, err := vectorRepo.GetByID(ctx, "doc_001")
+	if err != nil {
+		log.Printf("Failed to get document: %v", err)
+	} else {
+		fmt.Printf("Document: ID=%s, Content=%s\n", doc.ID, doc.Content)
+	}
+
+	// 示例 5: 删除文档
+	fmt.Println("\n=== 示例 5: 删除文档 ===")
+	deletedCount, err := vectorRepo.Delete(ctx, []string{"doc_001", "doc_002"})
+	if err != nil {
+		log.Printf("Failed to delete: %v", err)
+	} else {
+		fmt.Printf("Deleted %d documents\n", deletedCount)
+	}
+
+	// 示例 6: 多租户管理
+	fmt.Println("\n=== 示例 6: 多租户管理 ===")
+	tenantManager := factory.GetTenantManager()
+
+	// 为不同租户创建 Collection
+	tenant1Ctx := context.WithValue(context.Background(), "tenant_id", "tenant_1")
+	tenant2Ctx := context.WithValue(context.Background(), "tenant_id", "tenant_2")
+
+	collection1, err := tenantManager.GetCollection(tenant1Ctx, "tenant_1")
+	if err != nil {
+		log.Printf("Failed to get collection for tenant_1: %v", err)
+	} else {
+		fmt.Printf("Tenant 1 collection: %s\n", collection1)
+	}
+
+	collection2, err := tenantManager.GetCollection(tenant2Ctx, "tenant_2")
+	if err != nil {
+		log.Printf("Failed to get collection for tenant_2: %v", err)
+	} else {
+		fmt.Printf("Tenant 2 collection: %s\n", collection2)
+	}
+
+	// 列出所有租户
+	tenants := tenantManager.GetAllTenants()
+	fmt.Printf("All tenants: %v\n", tenants)
+
+	fmt.Println("\n=== 示例完成 ===")
+}
+
+// generateDummyVector 生成测试用的虚拟向量
+// 实际使用中应该使用嵌入模型生成真实向量
+func generateDummyVector(dimension int) []float32 {
+	vector := make([]float32, dimension)
+	for i := range vector {
+		vector[i] = 0.1 // 简单的测试值
+	}
+	return vector
+}
