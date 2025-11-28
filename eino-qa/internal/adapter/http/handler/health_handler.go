@@ -8,17 +8,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// MetricsProvider 指标提供者接口
+type MetricsProvider interface {
+	GetStats() interface{}
+}
+
 // HealthHandler 健康检查处理器
 type HealthHandler struct {
 	// 可以注入依赖来检查各个组件的健康状态
 	checkMilvus    func(ctx context.Context) error
 	checkDB        func(ctx context.Context) error
 	checkDashScope func(ctx context.Context) error
+	// 指标提供者
+	metricsProvider MetricsProvider
 }
 
 // NewHealthHandler 创建健康检查处理器
 func NewHealthHandler() *HealthHandler {
 	return &HealthHandler{}
+}
+
+// WithMetricsProvider 设置指标提供者
+func (h *HealthHandler) WithMetricsProvider(provider MetricsProvider) *HealthHandler {
+	h.metricsProvider = provider
+	return h
 }
 
 // WithMilvusCheck 设置 Milvus 健康检查函数
@@ -44,6 +57,7 @@ type HealthResponse struct {
 	Status     string                     `json:"status"`
 	Timestamp  string                     `json:"timestamp"`
 	Components map[string]ComponentHealth `json:"components,omitempty"`
+	Metrics    interface{}                `json:"metrics,omitempty"`
 }
 
 // ComponentHealth 组件健康状态
@@ -118,6 +132,12 @@ func (h *HealthHandler) HandleHealth(c *gin.Context) {
 		response.Status = "degraded"
 	}
 
+	// 添加指标信息
+	// 需求: 7.5 - 返回系统状态和关键指标快照
+	if h.metricsProvider != nil {
+		response.Metrics = h.metricsProvider.GetStats()
+	}
+
 	// 返回响应
 	statusCode := http.StatusOK
 	if !allHealthy {
@@ -178,4 +198,20 @@ func (h *HealthHandler) HandleReadiness(c *gin.Context) {
 		"timestamp":  time.Now().Format(time.RFC3339),
 		"components": components,
 	})
+}
+
+// HandleMetrics 处理指标查询请求
+// GET /health/metrics
+// 返回系统运行指标
+// 需求: 7.4, 7.5 - 统计各类请求的数量和平均响应时间，返回关键指标快照
+func (h *HealthHandler) HandleMetrics(c *gin.Context) {
+	if h.metricsProvider == nil {
+		c.JSON(http.StatusNotImplemented, gin.H{
+			"error": "metrics not available",
+		})
+		return
+	}
+
+	stats := h.metricsProvider.GetStats()
+	c.JSON(http.StatusOK, stats)
 }

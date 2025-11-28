@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"bytes"
+	"context"
 	"io"
 	"time"
 
@@ -9,20 +10,21 @@ import (
 	"github.com/google/uuid"
 )
 
-// LoggingMiddleware 日志记录中间件
-// 记录请求的详细信息，包括请求 ID、租户 ID、查询内容和处理时长
-type LoggingMiddleware struct {
-	logger Logger
+// ContextLogger 上下文感知的日志接口
+type ContextLogger interface {
+	Info(ctx context.Context, msg string, fields map[string]interface{})
+	Error(ctx context.Context, msg string, fields map[string]interface{})
 }
 
-// Logger 日志接口（简化版，适配实际的 logger）
-type Logger interface {
-	Info(msg string, fields map[string]interface{})
-	Error(msg string, fields map[string]interface{})
+// LoggingMiddleware 日志记录中间件
+// 记录请求的详细信息，包括请求 ID、租户 ID、查询内容和处理时长
+// 需求: 7.1 - 记录请求 ID、租户 ID、查询内容和处理时长
+type LoggingMiddleware struct {
+	logger ContextLogger
 }
 
 // NewLoggingMiddleware 创建日志记录中间件
-func NewLoggingMiddleware(logger Logger) *LoggingMiddleware {
+func NewLoggingMiddleware(logger ContextLogger) *LoggingMiddleware {
 	return &LoggingMiddleware{
 		logger: logger,
 	}
@@ -54,10 +56,15 @@ func (lm *LoggingMiddleware) Handler() gin.HandlerFunc {
 		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
 		c.Writer = blw
 
+		// 创建带有请求上下文的 context
+		ctx := context.WithValue(c.Request.Context(), "request_id", requestID)
+		if tenantID != nil {
+			ctx = context.WithValue(ctx, "tenant_id", tenantID)
+		}
+		c.Request = c.Request.WithContext(ctx)
+
 		// 记录请求开始
-		lm.logger.Info("request started", map[string]interface{}{
-			"request_id": requestID,
-			"tenant_id":  tenantID,
+		lm.logger.Info(ctx, "request started", map[string]interface{}{
 			"method":     c.Request.Method,
 			"path":       c.Request.URL.Path,
 			"query":      c.Request.URL.RawQuery,
@@ -87,26 +94,28 @@ func (lm *LoggingMiddleware) Handler() gin.HandlerFunc {
 			"response_size": blw.body.Len(),
 		}
 
+		// 获取请求上下文
+		ctx = c.Request.Context()
+
 		// 如果有错误，记录错误信息
+		// 需求: 7.2 - 记录错误堆栈和上下文信息
 		if len(c.Errors) > 0 {
 			logFields["errors"] = c.Errors.String()
-			lm.logger.Error("request completed with errors", logFields)
+			lm.logger.Error(ctx, "request completed with errors", logFields)
 		} else {
 			// 根据状态码决定日志级别
 			if statusCode >= 500 {
-				lm.logger.Error("request completed with server error", logFields)
+				lm.logger.Error(ctx, "request completed with server error", logFields)
 			} else if statusCode >= 400 {
-				lm.logger.Info("request completed with client error", logFields)
+				lm.logger.Info(ctx, "request completed with client error", logFields)
 			} else {
-				lm.logger.Info("request completed successfully", logFields)
+				lm.logger.Info(ctx, "request completed successfully", logFields)
 			}
 		}
 
 		// 如果请求体包含查询内容，记录查询详情（从脱敏后的内容获取）
 		if sanitizedBody, exists := c.Get("sanitized_request_body"); exists {
-			lm.logger.Info("request details", map[string]interface{}{
-				"request_id":     requestID,
-				"tenant_id":      tenantID,
+			lm.logger.Info(ctx, "request details", map[string]interface{}{
 				"sanitized_body": sanitizedBody,
 			})
 		}

@@ -19,6 +19,7 @@ type RouterConfig struct {
 	TenantMiddleware   gin.HandlerFunc
 	SecurityMiddleware gin.HandlerFunc
 	LoggingMiddleware  gin.HandlerFunc
+	MetricsMiddleware  gin.HandlerFunc
 	ErrorMiddleware    gin.HandlerFunc
 	AuthMiddleware     gin.HandlerFunc
 
@@ -52,12 +53,18 @@ func SetupRouter(config *RouterConfig) *gin.Engine {
 		router.Use(config.LoggingMiddleware)
 	}
 
-	// 4. 安全脱敏中间件
+	// 4. 指标收集中间件
+	// 需求: 7.4 - 统计各类请求的数量和平均响应时间
+	if config.MetricsMiddleware != nil {
+		router.Use(config.MetricsMiddleware)
+	}
+
+	// 5. 安全脱敏中间件
 	if config.SecurityMiddleware != nil {
 		router.Use(config.SecurityMiddleware)
 	}
 
-	// 5. 错误处理中间件（应该在最后）
+	// 6. 错误处理中间件（应该在最后）
 	if config.ErrorMiddleware != nil {
 		router.Use(config.ErrorMiddleware)
 	}
@@ -70,6 +77,7 @@ func SetupRouter(config *RouterConfig) *gin.Engine {
 			healthGroup.GET("", config.HealthHandler.HandleHealth)
 			healthGroup.GET("/live", config.HealthHandler.HandleLiveness)
 			healthGroup.GET("/ready", config.HealthHandler.HandleReadiness)
+			healthGroup.GET("/metrics", config.HealthHandler.HandleMetrics)
 		}
 	}
 
