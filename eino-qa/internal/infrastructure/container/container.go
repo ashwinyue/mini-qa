@@ -1,4 +1,3 @@
-
 package container
 
 import (
@@ -14,7 +13,6 @@ import (
 	"eino-qa/internal/infrastructure/config"
 	"eino-qa/internal/infrastructure/logger"
 	"eino-qa/internal/infrastructure/metrics"
-	"eino-qa/internal/infrastructure/repository/memory"
 	"eino-qa/internal/infrastructure/repository/milvus"
 	"eino-qa/internal/infrastructure/repository/sqlite"
 	"eino-qa/internal/infrastructure/tenant"
@@ -22,7 +20,6 @@ import (
 	"eino-qa/internal/usecase/vector"
 
 	"github.com/gin-gonic/gin"
-	milvusClient "github.com/milvus-io/milvus-sdk-go/v2/client"
 	"github.com/sirupsen/logrus"
 )
 
@@ -34,11 +31,11 @@ type Container struct {
 	// 基础设施
 	Logger           logger.Logger
 	LogrusLogger     *logrus.Logger
-	MetricsCollector *metrics.Collector
+	MetricsCollector metrics.Metrics
 
 	// 外部服务客户端
 	EinoClient   *eino.Client
-	MilvusClient milvusClient.Client
+	MilvusClient *milvus.Client
 
 	// 仓储层
 	VectorRepository  repository.VectorRepository
@@ -174,7 +171,7 @@ func (c *Container) initLogger() error {
 
 // initMetrics 初始化指标收集器
 func (c *Container) initMetrics() error {
-	c.MetricsCollector = metrics.NewCollector()
+	c.MetricsCollector = metrics.New(metrics.DefaultConfig())
 	c.LogrusLogger.Info("metrics collector initialized")
 	return nil
 }
@@ -199,12 +196,13 @@ func (c *Container) initEinoClient() error {
 
 // initMilvusClient 初始化 Milvus 客户端
 func (c *Container) initMilvusClient() error {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	client, err := milvusClient.NewClient(ctx, milvusClient.Config{
-		Address: fmt.Sprintf("%s:%d", c.Config.Milvus.Host, c.Config.Milvus.Port),
-	})
+	client, err := milvus.NewClient(milvus.ClientConfig{
+		Host:     c.Config.Milvus.Host,
+		Port:     c.Config.Milvus.Port,
+		Username: c.Config.Milvus.Username,
+		Password: c.Config.Milvus.Password,
+		Timeout:  c.Config.Milvus.Timeout,
+	}, c.LogrusLogger)
 	if err != nil {
 		return fmt.Errorf("failed to connect to milvus: %w", err)
 	}
@@ -216,12 +214,12 @@ func (c *Container) initMilvusClient() error {
 
 // initTenantManagement 初始化多租户管理
 func (c *Container) initTenantManagement() error {
-	// 创建 Collection 管理器
-	collectionManager := milvus.NewCollectionManager(c.MilvusClient, c.LogrusLogger)
+	// 创建 Milvus Collection 管理器
+	milvusCollectionManager := milvus.NewCollectionManager(c.MilvusClient, c.LogrusLogger)
 
 	// 创建 Milvus 租户管理器
 	c.MilvusTenantManager = milvus.NewTenantManager(
-		collectionManager,
+		milvusCollectionManager,
 		c.Config.DashScope.EmbeddingDimension,
 		c.LogrusLogger,
 	)
@@ -243,18 +241,20 @@ func (c *Container) initTenantManagement() error {
 // initRepositories 初始化仓储层
 func (c *Container) initRepositories() error {
 	// 向量仓储（Milvus）
+	// 注意：向量仓储是全局的，通过 TenantManager 处理多租户
 	c.VectorRepository = milvus.NewVectorRepository(
 		c.MilvusClient,
 		c.MilvusTenantManager,
-		c.EinoClient.GetEmbedModel(),
 		c.LogrusLogger,
 	)
 
 	// 订单仓储（SQLite）
-	c.OrderRepository = sqlite.NewOrderRepository(c.DBManager, c.LogrusLogger)
+	// 使用默认租户初始化，实际使用时会通过 tenant context 切换
+	c.OrderRepository = sqlite.NewOrderRepository(c.DBManager, "default")
 
-	// 会话仓储（内存实现，可以切换到 SQLite）
-	c.SessionRepository = memory.NewSessionRepository(c.Config.Session.Timeout)
+	// 会话仓储（SQLite 实现）
+	// 使用默认租户初始化，实际使用时会通过 tenant context 切换
+	c.SessionRepository = sqlite.NewSessionRepository(c.DBManager, "default")
 
 	c.LogrusLogger.Info("repositories initialized")
 	return nil
@@ -264,32 +264,26 @@ func (c *Container) initRepositories() error {
 func (c *Container) initAIComponents() error {
 	// 意图识别器
 	c.IntentRecognizer = eino.NewIntentRecognizer(
-		c.EinoClient.GetChatModel(),
-		c.Config.Intent.ConfidenceThreshold,
-		c.LogrusLogger,
+		c.EinoClient,
+		&c.Config.Intent,
 	)
 
 	// RAG 检索器
 	c.RAGRetriever = eino.NewRAGRetriever(
-		c.EinoClient.GetChatModel(),
-		c.EinoClient.GetEmbedModel(),
+		c.EinoClient,
 		c.VectorRepository,
-		c.Config.RAG.TopK,
-		c.Config.RAG.ScoreThreshold,
-		c.LogrusLogger,
+		&c.Config.RAG,
 	)
 
 	// 订单查询器
 	c.OrderQuerier = eino.NewOrderQuerier(
-		c.EinoClient.GetChatModel(),
+		c.EinoClient,
 		c.OrderRepository,
-		c.LogrusLogger,
 	)
 
 	// 响应生成器
 	c.ResponseGenerator = eino.NewResponseGenerator(
-		c.EinoClient.GetChatModel(),
-		c.LogrusLogger,
+		c.EinoClient,
 	)
 
 	c.LogrusLogger.Info("AI components initialized")
@@ -310,10 +304,10 @@ func (c *Container) initUseCases() error {
 	)
 
 	// 向量管理用例
-	c.VectorUseCase = vector.NewVectorUseCase(
-		c.VectorRepository,
+	c.VectorUseCase = vector.NewVectorManagementUseCase(
 		c.EinoClient.GetEmbedModel(),
-		c.Logger,
+		c.VectorRepository,
+		c.LogrusLogger,
 	)
 
 	c.LogrusLogger.Info("use cases initialized")
@@ -330,16 +324,19 @@ func (c *Container) initMiddlewares() error {
 	c.SecurityMiddleware = securityMw.Handler()
 
 	// 日志记录中间件
-	c.LoggingMiddleware = middleware.NewLoggingMiddleware(c.LogrusLogger)
+	loggingMw := middleware.NewLoggingMiddleware(c.Logger)
+	c.LoggingMiddleware = loggingMw.Handler()
 
 	// 指标收集中间件
-	c.MetricsMiddleware = middleware.NewMetricsMiddleware(c.MetricsCollector)
+	metricsMw := middleware.NewMetricsMiddleware(c.MetricsCollector)
+	c.MetricsMiddleware = metricsMw.Handler()
 
 	// 错误处理中间件
 	c.ErrorMiddleware = middleware.ErrorHandler()
 
 	// API Key 认证中间件
-	c.AuthMiddleware = middleware.NewAuthMiddleware(c.Config.Security.APIKeys)
+	authMw := middleware.NewAuthMiddleware(c.Config.Security.APIKeys)
+	c.AuthMiddleware = authMw.Handler()
 
 	c.LogrusLogger.Info("middlewares initialized")
 	return nil
@@ -354,15 +351,17 @@ func (c *Container) initHandlers() error {
 	c.VectorHandler = handler.NewVectorHandler(c.VectorUseCase)
 
 	// 模型管理处理器
-	c.ModelHandler = handler.NewModelHandler(c.EinoClient)
+	c.ModelHandler = handler.NewModelHandler(
+		c.Config.DashScope.ChatModel,
+		c.Config.DashScope.EmbedModel,
+	)
 
 	// 健康检查处理器
 	c.HealthHandler = handler.NewHealthHandler().
 		WithMetricsProvider(c.MetricsCollector).
 		WithMilvusCheck(func(ctx context.Context) error {
-			// 简单的健康检查：列出 collections
-			_, err := c.MilvusClient.ListCollections(ctx)
-			return err
+			// 使用 Ping 方法检查 Milvus 连接
+			return c.MilvusClient.Ping(ctx)
 		}).
 		WithDBCheck(func(ctx context.Context) error {
 			// 检查默认租户的数据库连接
